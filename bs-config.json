@@ -1,0 +1,12 @@
+{
+  "server": {
+    "baseDir": [
+      "./app",
+      "./build/contracts"
+    ],
+    "routes": {
+      "/vendor": "./node_modules",
+      "/BookLending.json": "./build/contracts/BookLending.json"
+    }
+  }
+}

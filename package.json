@@ -1,0 +1,21 @@
+{
+  "name": "decentralized-book-lending",
+  "version": "1.0.0",
+  "description": "Decentralized Book Lending System using Ethereum Smart Contracts (Solidity 0.5.16)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "lite-server",
+    "start": "lite-server",
+    "test": "truffle test"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "truffle-contract": "^4.0.31",
+    "web3": "^1.5.3"
+  },
+  "devDependencies": {
+    "lite-server": "^2.6.1",
+    "truffle": "^5.8.0"
+  }
+}
