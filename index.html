@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📚 BlockLib - Decentralized Book Lending System</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #64748b;
+      --dark-bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.6);
+      --border: rgba(148, 163, 184, 0.1);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #1e293b 100%);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--text) !important;
+      font-size: 1.5rem;
+    }
+
+    .nav-gradient {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(30, 41, 59, 0.3) 100%);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title i {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .form-control {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      color: var(--text-muted);
+    }
+
+    .form-control::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    .table-custom {
+      background: transparent;
+      color: var(--text);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .table-custom thead th {
+      background: rgba(30, 41, 59, 0.8);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 1rem;
+    }
+
+    .table-custom tbody tr {
+      background: transparent;
+      border-color: var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .table-custom tbody tr:hover {
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .table-custom tbody td {
+      padding: 1rem;
+      border-color: var(--border);
+      vertical-align: middle;
+    }
+
+    .status-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-available {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-borrowed {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .librarian-item {
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .librarian-item:hover {
+      background: rgba(37, 99, 235, 0.1);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .librarian-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .account-badge {
+      background: rgba(37, 99, 235, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.875rem;
+      border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    .loader {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+      color: var(--primary);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+
+    .footer-text {
+      color: #2563eb !important;
+      font-weight: 500;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon i {
+      color: white;
+      font-size: 1.25rem;
+    }
+
+    .sub-description {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted) !important;
+    }
+
+    .form-label {
+      color: var(--text-muted) !important;
+    }
+
+    /* Quick Tips Styles */
+    .quick-tips {
+      background: rgba(37, 99, 235, 0.05);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .tip-item {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .tip-item:last-child {
+      border-bottom: none;
+    }
+
+    .tip-item:hover {
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    .tip-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(37, 99, 235, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .tip-icon i {
+      color: var(--primary);
+      font-size: 0.875rem;
+    }
+
+    .tip-content h6 {
+      color: var(--text);
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    .tip-content p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 0;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark nav-gradient">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-book me-2"></i>
+        BlockLib
+      </a>
+      <div class="navbar-text">
+        <span class="hero-subtitle">Decentralized Library System</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+
+    <!-- Hero Section -->
+    <div class="hero-section text-center">
+      <div class="row align-items-center">
+        <div class="col-md-8 mx-auto">
+          <h1 class="display-5 fw-bold mb-3">Decentralized Book Lending System</h1>
+          <p class="lead hero-subtitle mb-4">Manage your library with blockchain technology - secure, transparent, and efficient</p>
+          <div class="account-badge d-inline-block">
+            <i class="fas fa-wallet me-2"></i>
+            <span id="accountAddress">Connecting to MetaMask...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader" class="loader">
+      <div class="spinner-border"></div>
+      <p class="mt-3 text-muted">Loading blockchain data...</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="content" style="display:none;">
+
+      <!-- Book Management Section -->
+      <div class="row">
+        <div class="col-lg-8">
+          
+          <!-- Book List -->
+          <div class="glass-card p-4 mb-4">
+            <div class="section-title">
+              <i class="fas fa-list"></i>
+              Book Catalog
+            </div>
+            <div class="table-responsive">
+              <table class="table table-custom">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Borrower</th>
+                    <th>Due Date</th>
+                  </tr>
+                </thead>
+                <tbody id="booksList">
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                      <i class="fas fa-book-open me-2"></i>
+                      No books available
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quick Tips Section -->
+          <div class="glass-card p-4 mb-4">
+            <div class="section-title">
+              <i class="fas fa-lightbulb"></i>
+              Quick Tips
+            </div>
+            <div class="quick-tips">
+              <div class="tip-item d-flex align-items-start">
+                <div class="tip-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="tip-content">
+                  <h6>Smart Contract Security</h6>
+                  <p>All book transactions are permanently recorded on the blockchain, ensuring tamper-proof records and complete transparency.</p>
+                </div>
+              </div>
+              <div class="tip-item d-flex align-items-start">
+                <div class="tip-icon">
+                  <i class="fas fa-gas-pump"></i>
+                </div>
+                <div class="tip-content">
+                  <h6>Gas Fee Optimization</h6>
+                  <p>Plan your library operations during low network congestion to save on transaction fees. Bundle multiple operations when possible.</p>
+                </div>
+              </div>
+              <div class="tip-item d-flex align-items-start">
+                <div class="tip-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="tip-content">
+                  <h6>Automatic Returns</h6>
+                  <p>Books are automatically returned when the due date passes. Late returns may incur penalties based on smart contract rules.</p>
+                </div>
+              </div>
+              <div class="tip-item d-flex align-items-start">
+                <div class="tip-icon">
+                  <i class="fas fa-search"></i>
+                </div>
+                <div class="tip-content">
+                  <h6>Book Verification</h6>
+                  <p>Each book has a unique blockchain ID. Verify book availability and history before processing lending operations.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Library Management Section -->
+          <div class="glass-card p-4">
+            <div class="section-title">
+              <i class="fas fa-users-cog"></i>
+              Librarian Management
+            </div>
+            
+            <!-- Add Librarian -->
+            <form id="addLibrarianForm" class="mb-4">
+              <div class="mb-3">
+                <label class="form-label small">Ethereum Address</label>
+                <input type="text" id="librarianAddr" class="form-control" placeholder="0x..." required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-user-plus me-2"></i>
+                Add Librarian
+              </button>
+            </form>
+
+            <!-- Librarian List -->
+            <div>
+              <div class="section-title">
+                <i class="fas fa-list-check"></i>
+                Registered Librarians
+              </div>
+              <div id="librarianList">
+                <div class="librarian-item">
+                  <div class="librarian-dot"></div>
+                  <span class="text-muted">Loading librarians...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-4">
+          
+          <!-- Quick Actions -->
+          <div class="glass-card p-4 mb-4">
+            <div class="section-title">
+              <i class="fas fa-plus-circle"></i>
+              Add New Book
+            </div>
+            
+            <!-- Sub Keterangan untuk Add New Book -->
+            <div class="sub-description">
+              <i class="fas fa-info-circle me-2"></i>
+              Add new books to the library catalog. Fill in the title and author details below.
+            </div>
+            
+            <form id="addBookForm">
+              <div class="mb-3">
+                <label class="form-label small">Book Title</label>
+                <input type="text" id="bookTitle" class="form-control" placeholder="Enter book title" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small">Author Name</label>
+                <input type="text" id="bookAuthor" class="form-control" placeholder="Enter author name" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-plus me-2"></i>
+                Add Book
+              </button>
+            </form>
+          </div>
+
+          <!-- Book Operations -->
+          <div class="glass-card p-4">
+            <div class="section-title">
+              <i class="fas fa-exchange-alt"></i>
+              Book Operations
+            </div>
+            
+            <!-- Sub Keterangan untuk Book Operations -->
+            <div class="sub-description">
+              <i class="fas fa-info-circle me-2"></i>
+              Manage book lending and returning processes. Use book IDs from the catalog.
+            </div>
+            
+            <!-- Borrow Form -->
+            <form id="borrowForm" class="mb-3">
+              <div class="mb-3">
+                <label class="form-label small">Book ID</label>
+                <input type="number" id="borrowBookId" class="form-control" placeholder="Enter book ID" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small">Duration (seconds)</label>
+                <input type="number" id="durationSeconds" class="form-control" placeholder="Duration in seconds" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-hand-holding me-2"></i>
+                Borrow Book
+              </button>
+            </form>
+
+            <!-- Return Form -->
+            <form id="returnForm">
+              <div class="mb-3">
+                <label class="form-label small">Book ID to Return</label>
+                <input type="number" id="returnBookId" class="form-control" placeholder="Enter book ID" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-undo me-2"></i>
+                Return Book
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="row">
+          <div class="col-md-8 mx-auto">
+            <h6 class="mb-2 footer-text">BlockLib - Decentralized Book Lending System</h6>
+            <p class="footer-text mb-0">Built with ❤️ using Ethereum Smart Contracts</p>
+            <small class="footer-text">Secure • Transparent • Efficient</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
